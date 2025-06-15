@@ -8,9 +8,18 @@
 
     <!-- Navigatielinks -->
     <div class="flex items-center space-x-3 text-sm">
-      <a href="{{ route('admin.dashboard') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">Dashboard</a>
-      <a href="{{ route('admin.materials.index') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">Materiaalbeheer</a>
-      <a href="{{ route('admin.bestellingen.index') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">Bestellingen</a>
+      <a href="{{ route('admin.dashboard') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">
+        Dashboard
+      </a>
+      <a href="{{ route('admin.materials.index') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">
+        Materiaalbeheer
+      </a>
+      <a href="{{ route('admin.bestellingen.index') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">
+        Bestellingen
+      </a>
+      <a href="{{ route('admin.users.index') }}" class="bg-blue-400 text-white px-4 py-1 rounded-full font-semibold hover:bg-blue-500">
+        Techniekers
+      </a>
 
       <form method="POST" action="{{ route('logout') }}" class="inline">
         @csrf

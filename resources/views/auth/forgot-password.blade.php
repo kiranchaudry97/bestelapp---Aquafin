@@ -1,25 +1,55 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Wachtwoord vergeten | BestelApp</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-md bg-white rounded shadow-md p-6 text-gray-800">
+
+    <!-- Logo -->
+    <div class="text-center mb-6">
+      <img src="{{ asset('images/logoaquafin.jpg') }}" alt="Aquafin logo" class="w-28 mx-auto rounded shadow-sm">
     </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <!-- Uitleg -->
+    <p class="mb-4 text-sm text-gray-600 text-center">
+      Wachtwoord vergeten? Geen probleem. Geef je e-mailadres op en we sturen je een link waarmee je een nieuw wachtwoord kunt instellen.
+    </p>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
+    <!-- Sessiestatus -->
+    @if (session('status'))
+      <div class="bg-green-100 border border-green-300 text-green-700 px-4 py-2 rounded text-sm mb-4 text-center">
+        ✅ {{ session('status') }}
+      </div>
+    @endif
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+    <!-- Formulier -->
+    <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+      @csrf
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">E-mailadres</label>
+        <input type="email" id="email" name="email" required autofocus
+               class="w-full border border-blue-300 rounded px-3 py-2 text-sm"
+               value="{{ old('email') }}">
+        @error('email')
+          <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+        @enderror
+      </div>
+
+      <div class="text-right">
+        <button type="submit"
+                class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded">
+          Verzend resetlink
+        </button>
+      </div>
     </form>
-</x-guest-layout>
+
+  </div>
+
+</body>
+</html>

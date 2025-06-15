@@ -11,28 +11,22 @@ class RoleAndUserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Rollen aanmaken
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        // Rollen aanmaken als ze nog niet bestaan
         $techRole = Role::firstOrCreate(['name' => 'technieker']);
 
-        // Admin gebruiker
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@aquafin.be'],
-            [
-                'name' => 'Admin Gebruiker',
-                'password' => Hash::make('admin123'),
-            ]
-        );
-        $admin->assignRole($adminRole);
+        // Bestaande gebruiker verwijderen (optioneel maar handig bij herstart)
+        User::where('email', 'tech@aquafin.be')->delete();
 
-        // Technieker gebruiker
-        $tech = User::firstOrCreate(
-            ['email' => 'tech@aquafin.be'],
-            [
-                'name' => 'Technieker Gebruiker',
-                'password' => Hash::make('tech123'),
-            ]
-        );
+        // Technieker opnieuw aanmaken
+        $tech = User::create([
+            'name' => 'Technieker Gebruiker',
+            'email' => 'tech@aquafin.be',
+            'password' => Hash::make('tech123'),
+        ]);
+
+        // Rol toewijzen
         $tech->assignRole($techRole);
+
+        $this->command->info('✅ Technieker opnieuw aangemaakt: tech@aquafin.be / tech123');
     }
 }

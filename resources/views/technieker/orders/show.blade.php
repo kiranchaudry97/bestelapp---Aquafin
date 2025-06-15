@@ -15,8 +15,16 @@
 
     <!-- Order info -->
     <div class="bg-white p-4 rounded shadow mb-6 border">
-      <p class="mb-2"><strong>Leverdatum:</strong> {{ \Carbon\Carbon::parse($order->leverdatum)->format('d/m/Y') }}</p>
-      <p><strong>Status:</strong>
+      <p class="mb-2">
+        <strong>Besteldatum:</strong>
+        {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}
+      </p>
+      <p class="mb-2">
+        <strong>Leverdatum:</strong>
+        {{ \Carbon\Carbon::parse($order->leverdatum)->format('d/m/Y') }}
+      </p>
+      <p>
+        <strong>Status:</strong>
         @php
           $badgeClass = match($order->status) {
             'in_behandeling' => 'bg-blue-100 text-blue-800',

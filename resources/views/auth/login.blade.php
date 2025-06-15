@@ -60,10 +60,11 @@
   <!-- Testgegevens -->
   <div class="mt-6 text-left text-sm text-gray-600 bg-gray-50 border border-gray-300 rounded p-4">
     <p class="mb-1 font-semibold text-gray-700">🔐 Testlogin:</p>
-    <ul class="list-disc list-inside">
+    <ul class="list-disc list-inside mb-3">
       <li><strong>Technieker:</strong> tech@aquafin.be / <code>tech123</code></li>
       <li><strong>Admin:</strong> admin@aquafin.be / <code>admin123</code></li>
     </ul>
+    <p><span class="font-medium text-gray-800">ℹ Na het inloggen</span> kan je via het profiel je wachtwoord zelf wijzigen.</p>
   </div>
 
 </div>

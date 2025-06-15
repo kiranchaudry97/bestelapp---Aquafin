@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\OrderOverviewController;
+use App\Http\Controllers\Admin\TechniekerAccountController;
 use App\Http\Controllers\Technieker\OrderController;
 
 /*
@@ -38,14 +39,24 @@ Route::get('/dashboard', function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('materials', MaterialController::class);
-        Route::get('bestellingen', [OrderOverviewController::class, 'index'])->name('bestellingen.index');
-        Route::post('bestellingen/{order}/status', [OrderOverviewController::class, 'updateStatus'])->name('bestellingen.status');
-    });
+    // Materiaalbeheer
+    Route::resource('materials', MaterialController::class);
+
+    // Bestellingenbeheer
+    Route::get('bestellingen', [OrderOverviewController::class, 'index'])->name('bestellingen.index');
+    Route::post('bestellingen/{order}/status', [OrderOverviewController::class, 'updateStatus'])->name('bestellingen.status');
+
+    // Techniekerbeheer
+    Route::get('techniekers', [TechniekerAccountController::class, 'index'])->name('techniekers.index');
+    Route::get('techniekers/create', [TechniekerAccountController::class, 'create'])->name('techniekers.create');
+    Route::post('techniekers', [TechniekerAccountController::class, 'store'])->name('techniekers.store');
+
+    // Optionele alias voor compatibiliteit met oude views
+    Route::get('users', [TechniekerAccountController::class, 'index'])->name('users.index');
 });
 
 /*
@@ -53,28 +64,28 @@ Route::middleware(['auth'])->group(function () {
 | Technieker Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
-    Route::get('/technieker/dashboard', function () {
+Route::middleware(['auth'])->prefix('technieker')->name('technieker.')->group(function () {
+    Route::get('/dashboard', function () {
         if (!auth()->user()->hasRole('technieker')) abort(403);
         return view('technieker.dashboard');
-    })->name('technieker.dashboard');
+    })->name('dashboard');
 
-    Route::prefix('technieker')->name('technieker.')->group(function () {
-        Route::get('materials', [OrderController::class, 'index'])->name('materials.index');
-        Route::post('cart/add', [OrderController::class, 'addToCart'])->name('cart.add');
-        Route::get('cart', [OrderController::class, 'cart'])->name('cart.view');
-        Route::post('cart/submit', [OrderController::class, 'submitOrder'])->name('cart.submit');
-        Route::post('cart/remove', [OrderController::class, 'removeFromCart'])->name('cart.remove');
+    // Materialen en winkelmand
+    Route::get('materials', [OrderController::class, 'index'])->name('materials.index');
+    Route::post('cart/add', [OrderController::class, 'addToCart'])->name('cart.add');
+    Route::get('cart', [OrderController::class, 'cart'])->name('cart.view');
+    Route::post('cart/submit', [OrderController::class, 'submitOrder'])->name('cart.submit');
+    Route::post('cart/remove', [OrderController::class, 'removeFromCart'])->name('cart.remove');
 
-        Route::get('orders', [OrderController::class, 'orders'])->name('orders.index');
-        Route::post('orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
-        Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    });
+    // Bestellingen
+    Route::get('orders', [OrderController::class, 'orders'])->name('orders.index');
+    Route::post('orders/{id}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Profielbeheer
+| Profielbeheer (voor admin & technieker)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {

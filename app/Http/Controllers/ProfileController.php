@@ -7,12 +7,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Toon het profiel bewerkformulier van de gebruiker.
      */
     public function edit(Request $request): View
     {
@@ -22,23 +23,30 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Werk de profielgegevens van de gebruiker bij.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // ✅ Optioneel wachtwoord bijwerken indien ingevuld
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
 
-        $request->user()->save();
+        // ✅ Reset e-mailverificatie als e-mail werd aangepast
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
-     * Delete the user's account.
+     * Verwijder het account van de gebruiker.
      */
     public function destroy(Request $request): RedirectResponse
     {

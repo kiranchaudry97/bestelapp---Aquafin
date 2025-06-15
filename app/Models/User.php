@@ -40,4 +40,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * ✅ Custom e-mail router voor notificaties.
+     * Gebruik een alternatief e-mailadres voor specifieke accounts.
+     */
+    public function routeNotificationForMail(): string
+    {
+        // Als het gaat om het testaccount, stuur mail naar dev/test-adres
+        if ($this->email === 'tech@aquafin.be') {
+            return 'kiran.chaudry@outlook.be';
+        }
+
+        return $this->email;
+    }
 }

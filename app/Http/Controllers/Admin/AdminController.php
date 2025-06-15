@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Material;
+use App\Models\Order;
 
 class AdminController extends Controller
 {
@@ -24,10 +25,18 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        // ✅ Recent bestellingen in behandeling
+        $recentOrders = Order::with('user')
+            ->where('status', 'in_behandeling')
+            ->orderByDesc('created_at')
+            ->take(5)
+            ->get();
+
         return view('admin.dashboard', compact(
             'totalMaterials',
             'lowStockMaterials',
-            'recentMaterials'
+            'recentMaterials',
+            'recentOrders'  // Voeg dit toe aan de view
         ));
     }
 }
